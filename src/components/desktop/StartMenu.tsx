@@ -15,6 +15,7 @@ export const StartMenu: React.FC = () => {
   const [showPowerMenu, setShowPowerMenu] = useState(false);
 
   const pinnedApps: { id: WindowId; name: string; icon: React.ReactNode; desc: string }[] = [
+    { id: 'iso-manager', name: 'ISO Manager', icon: <Disc className="w-5 h-5 text-emerald-400" />, desc: 'OS Build & Download' },
     { id: 'installer', name: 'Install ENCANTOS', icon: <Disc className="w-5 h-5 text-rose-400" />, desc: 'System Installer' },
     { id: 'iso-generator', name: 'ISO Generator', icon: <Disc className="w-5 h-5 text-cyan-400" />, desc: 'Custom USB Builder' },
     { id: 'files', name: 'Encantos Files', icon: <Folder className="w-5 h-5 text-amber-400" />, desc: 'File Manager' },
@@ -36,7 +37,7 @@ export const StartMenu: React.FC = () => {
     { name: 'Graphics', items: [{ name: 'Encantos Photos', windowId: 'image-viewer' }, { name: 'Wallpaper Studio', windowId: 'settings' }] },
     { name: 'Multimedia', items: [{ name: 'PipeWire Audio Control', windowId: 'settings' }] },
     { name: 'Utilities', items: [{ name: 'Calculator', windowId: 'calculator' }, { name: 'Encantos Backup', windowId: 'backup' }] },
-    { name: 'System', items: [{ name: 'ISO Generator', windowId: 'iso-generator' }, { name: 'System Settings', windowId: 'settings' }, { name: 'System Monitor', windowId: 'system-monitor' }, { name: 'Disk Utility', windowId: 'disk-utility' }, { name: 'Update Center', windowId: 'update-center' }, { name: 'Install ENCANTOS OS', windowId: 'installer' }] },
+    { name: 'System', items: [{ name: 'ISO Manager', windowId: 'iso-manager' }, { name: 'ISO Generator', windowId: 'iso-generator' }, { name: 'System Settings', windowId: 'settings' }, { name: 'System Monitor', windowId: 'system-monitor' }, { name: 'Disk Utility', windowId: 'disk-utility' }, { name: 'Update Center', windowId: 'update-center' }, { name: 'Install ENCANTOS OS', windowId: 'installer' }] },
   ];
 
   const handleLaunchApp = (winId: WindowId) => {

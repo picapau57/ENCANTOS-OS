@@ -176,6 +176,19 @@ ENCANTOS OS OFFICIAL LIVE & INSTALLABLE COMPRESSED SYSTEM ROOTFS PAYLOAD
       action: () => openWindow('disk-utility')
     },
     {
+      id: 'iso-manager',
+      label: 'ISO Manager',
+      icon: (
+        <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 via-teal-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-emerald-500/25 ring-1 ring-white/30 group-hover:scale-105 transition-transform">
+          <Disc className="w-6 h-6 text-white" />
+          <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border border-slate-900 flex items-center justify-center shadow">
+            <Activity className="w-3 h-3 text-white" />
+          </div>
+        </div>
+      ),
+      action: () => openWindow('iso-manager')
+    },
+    {
       id: 'iso-generator',
       label: 'ISO Generator',
       icon: (

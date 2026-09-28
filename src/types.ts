@@ -12,7 +12,8 @@ export type WindowId =
   | 'calculator'
   | 'image-viewer'
   | 'iso-studio'
-  | 'iso-generator';
+  | 'iso-generator'
+  | 'iso-manager';
 
 export interface WindowState {
   id: WindowId;

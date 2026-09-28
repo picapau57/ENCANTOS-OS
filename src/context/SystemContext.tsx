@@ -176,6 +176,17 @@ const INITIAL_WINDOWS: Record<WindowId, WindowState> = {
     zIndex: 23,
     position: { x: 170, y: 50 },
     size: { width: 940, height: 630 }
+  },
+  'iso-manager': {
+    id: 'iso-manager',
+    title: 'ISO Manager',
+    iconName: 'Disc',
+    isOpen: false,
+    isMinimized: false,
+    isMaximized: false,
+    zIndex: 24,
+    position: { x: 160, y: 40 },
+    size: { width: 920, height: 620 }
   }
 };
 

@@ -21,6 +21,7 @@ import { EncantosCalculator } from '../apps/EncantosCalculator';
 import { EncantosImageViewer } from '../apps/EncantosImageViewer';
 import { EncantosIsoStudio } from '../apps/EncantosIsoStudio';
 import { EncantosIsoGenerator } from '../apps/EncantosIsoGenerator';
+import { EncantosIsoManager } from '../apps/EncantosIsoManager';
 
 export const WindowManager: React.FC = () => {
   const { 
@@ -113,6 +114,7 @@ export const WindowManager: React.FC = () => {
       case 'image-viewer': return <EncantosImageViewer />;
       case 'iso-studio': return <EncantosIsoStudio />;
       case 'iso-generator': return <EncantosIsoGenerator />;
+      case 'iso-manager': return <EncantosIsoManager />;
       default: return null;
     }
   };
@@ -133,6 +135,7 @@ export const WindowManager: React.FC = () => {
       case 'image-viewer': return <ImageIcon className="w-3.5 h-3.5 text-pink-400" />;
       case 'iso-studio': return <Cpu className="w-3.5 h-3.5 text-cyan-400" />;
       case 'iso-generator': return <Disc className="w-3.5 h-3.5 text-violet-400" />;
+      case 'iso-manager': return <Disc className="w-3.5 h-3.5 text-emerald-400" />;
       default: return null;
     }
   };

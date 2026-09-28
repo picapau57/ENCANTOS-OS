@@ -46,6 +46,7 @@ export const Taskbar: React.FC = () => {
 
   const pinnedWindowIds: WindowId[] = [
     'installer',
+    'iso-manager',
     'files',
     'store',
     'terminal',
@@ -77,6 +78,7 @@ export const Taskbar: React.FC = () => {
   const getTaskbarIcon = (id: WindowId) => {
     switch (id) {
       case 'installer': return <Disc className="w-5 h-5 text-rose-400" />;
+      case 'iso-manager': return <Disc className="w-5 h-5 text-emerald-400" />;
       case 'files': return <Folder className="w-5 h-5 text-amber-400" />;
       case 'store': return <ShoppingBag className="w-5 h-5 text-violet-400" />;
       case 'terminal': return <Terminal className="w-5 h-5 text-emerald-400" />;
