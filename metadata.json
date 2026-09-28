@@ -1,0 +1,6 @@
+{
+  "name": "ENCANTOS OS",
+  "description": "Next-generation Linux desktop operating system and bootable ISO generator featuring original visual identity, custom desktop environment, Calamares installer, and native system suite.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

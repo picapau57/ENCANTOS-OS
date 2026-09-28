@@ -1,0 +1,31 @@
+# Calamares branding for ENCANTOS OS
+---
+componentName:  encantos
+welcomeStyleCalamares: false
+welcomeExpandingLogo: true
+windowExpanding: normal
+windowSize: 960px, 620px
+windowPlacement: center
+
+strings:
+    productName:         ENCANTOS OS
+    shortProductName:    Encantos
+    version:             1.0.0 (Aurora)
+    shortVersion:        1.0
+    versionedName:       ENCANTOS OS 1.0.0 "Aurora"
+    shortVersionedName:  Encantos OS 1.0
+    bootloaderEntryName: Encantos OS
+    productUrl:          https://encantos-os.org
+    supportUrl:          https://encantos-os.org/support
+    knownIssuesUrl:      https://encantos-os.org/issues
+    releaseNotesUrl:     https://encantos-os.org/release-notes
+
+images:
+    productLogo:         "logo.png"
+    productIcon:         "icon.png"
+    productWelcome:      "welcome.png"
+
+style:
+   SidebarBackground:    "#0f172a"
+   SidebarTextColor:     "#f8fafc"
+   SidebarTextHighlight: "#8b5cf6"
