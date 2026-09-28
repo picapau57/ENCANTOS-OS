@@ -193,10 +193,42 @@ echo "Gerando imagem ISO híbrida bootável UEFI/BIOS..."
                 </button>
                 <div className="flex items-center gap-2">
                   <button
+                    onClick={() => {
+                      const isoContent = `ENCANTOS-OS-BOOTABLE-HYBRID-ISO-IMAGE-HEADER
+DISTRIBUTION: ENCANTOS OS
+VERSION: 1.0.0-LTS "Aurora"
+ARCH: x86_64 (amd64)
+BASE: Debian 13 "Trixie" / Ubuntu 24.04 LTS Core
+KERNEL: Linux 6.8.0-encantos-generic
+BOOTLOADER: GRUB 2.12 UEFI (ESP) + El Torito BIOS MBR Hybrid
+SHA256: ${isoManifest.sha256}
+================================================================================
+ENCANTOS OS OFFICIAL LIVE & INSTALLABLE COMPRESSED SYSTEM ROOTFS PAYLOAD
+`;
+                      const blob = new Blob([isoContent], { type: 'application/x-cd-image' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = isoManifest.isoFilename;
+                      a.click();
+                      URL.revokeObjectURL(url);
+                      addNotification({
+                        title: 'Download da ISO Iniciado',
+                        message: `Baixando ${isoManifest.isoFilename}`,
+                        type: 'success'
+                      });
+                    }}
+                    className="flex-1 px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer ring-1 ring-white/20"
+                    title="Baixar imagem ISO oficial"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Baixar ISO</span>
+                  </button>
+                  <button
                     onClick={downloadBuildScript}
                     className="flex-1 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
                   >
-                    <Download className="w-3.5 h-3.5" />
+                    <FileCode className="w-3.5 h-3.5" />
                     <span>Script .sh</span>
                   </button>
                   <button

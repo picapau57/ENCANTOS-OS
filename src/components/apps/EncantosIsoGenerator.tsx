@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { 
   Disc, Usb, Cpu, Sparkles, Check, ArrowRight, ArrowLeft, Download, 
   RefreshCw, Terminal, Layers, Palette, Settings, ShieldCheck, 
@@ -145,6 +145,14 @@ export const EncantosIsoGenerator: React.FC = () => {
       return next;
     });
   };
+
+  useEffect(() => {
+    return () => {
+      if (buildIntervalRef.current) {
+        clearInterval(buildIntervalRef.current);
+      }
+    };
+  }, []);
 
   const filteredPackages = useMemo(() => {
     return AVAILABLE_CUSTOM_PACKAGES.filter(pkg => {
@@ -1027,15 +1035,36 @@ echo "==> Done! File created: build/encantos-custom-1.0.0-amd64.iso"
                   )}
                 </div>
 
-                <div className="flex justify-end pt-2">
-                  <button
-                    onClick={startBuildPipeline}
-                    disabled={isBuilding}
-                    className="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 text-white rounded-xl text-xs font-semibold shadow-lg shadow-violet-600/30 flex items-center gap-2 cursor-pointer transition-all"
-                  >
-                    {isBuilding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                    <span>{isBuilding ? 'Building Customized ISO...' : 'Generate Customized ISO Now'}</span>
-                  </button>
+                <div className="flex items-center justify-between pt-2">
+                  {isBuilding ? (
+                    <button
+                      onClick={cancelBuildPipeline}
+                      className="px-3.5 py-2 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-xl text-xs font-medium border border-rose-800/60 transition-colors cursor-pointer"
+                    >
+                      Cancelar Compilação
+                    </button>
+                  ) : <div />}
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => startBuildPipeline(3)}
+                      disabled={isBuilding}
+                      className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-200 hover:text-white rounded-xl text-xs font-semibold border border-slate-700 transition-all cursor-pointer flex items-center gap-1.5"
+                      title="Compilação ultra-rápida (Express)"
+                    >
+                      <Zap className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Gerar Expresso (3x)</span>
+                    </button>
+
+                    <button
+                      onClick={() => startBuildPipeline(1)}
+                      disabled={isBuilding}
+                      className="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-50 text-white rounded-xl text-xs font-semibold shadow-lg shadow-violet-600/30 flex items-center gap-2 cursor-pointer transition-all"
+                    >
+                      {isBuilding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                      <span>{isBuilding ? 'Compilando ISO...' : 'Gerar ISO Customizada'}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

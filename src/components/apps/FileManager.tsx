@@ -291,7 +291,17 @@ export const FileManager: React.FC = () => {
       navigateTo(item.id);
     } else {
       // Launch or preview file
-      if (item.name.endsWith('.txt') || item.name.endsWith('.md') || item.name.endsWith('.sh') || item.name.endsWith('.json')) {
+      if (item.name.endsWith('.iso')) {
+        // Direct download trigger for ISO file
+        const blob = new Blob([item.content || 'ENCANTOS-OS-ISO-IMAGE'], { type: 'application/x-cd-image' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = item.name;
+        a.click();
+        URL.revokeObjectURL(url);
+        openWindow('iso-studio');
+      } else if (item.name.endsWith('.txt') || item.name.endsWith('.md') || item.name.endsWith('.sh') || item.name.endsWith('.json')) {
         openWindow('pad', { fileId: item.id });
       } else if (item.name.endsWith('.png') || item.name.endsWith('.jpg')) {
         openWindow('image-viewer');

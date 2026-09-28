@@ -247,6 +247,39 @@ Installer: Calamares 3.3.6 Custom Branding
 `
   },
   { 
+    id: 'f-encantos-iso-desktop', 
+    name: 'ENCANTOS-OS-1.0.0-Aurora-amd64.iso', 
+    type: 'file', 
+    parentId: 'desktop', 
+    path: '/home/encantos/Desktop/ENCANTOS-OS-1.0.0-Aurora-amd64.iso', 
+    size: '2.4 GB', 
+    modified: '2026-09-28 12:00',
+    content: `ENCANTOS-OS-BOOTABLE-HYBRID-ISO-IMAGE
+DISTRIBUTION: ENCANTOS OS 1.0.0-LTS "Aurora"
+ARCH: x86_64 (amd64)
+KERNEL: Linux 6.8.0-encantos-generic
+BOOTLOADER: GRUB 2.12 UEFI (ESP) + El Torito BIOS MBR Hybrid
+SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+INSTALLER: Calamares 3.3.6
+READY FOR USB FLASHING (RUFUS / VENTOY / BALENA ETCHER)
+`
+  },
+  { 
+    id: 'f-encantos-iso-downloads', 
+    name: 'ENCANTOS-OS-1.0.0-Aurora-amd64.iso', 
+    type: 'file', 
+    parentId: 'downloads', 
+    path: '/home/encantos/Downloads/ENCANTOS-OS-1.0.0-Aurora-amd64.iso', 
+    size: '2.4 GB', 
+    modified: '2026-09-28 12:00',
+    content: `ENCANTOS-OS-BOOTABLE-HYBRID-ISO-IMAGE
+DISTRIBUTION: ENCANTOS OS 1.0.0-LTS "Aurora"
+ARCH: x86_64 (amd64)
+KERNEL: Linux 6.8.0-encantos-generic
+SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+`
+  },
+  { 
     id: 'f-build-script', 
     name: 'build-encantos.sh', 
     type: 'file', 
