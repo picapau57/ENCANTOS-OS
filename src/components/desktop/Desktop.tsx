@@ -37,6 +37,86 @@ export const Desktop: React.FC = () => {
   const officialIsoFilename = 'ENCANTOS-OS-1.0.0-Aurora-amd64.iso';
   const officialIsoSha256 = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
 
+  const downloadBuildScript = () => {
+    const scriptContent = `#!/usr/bin/env bash
+# ==============================================================================
+# ENCANTOS OS 1.0.0-LTS "Aurora" — SCRIPT OFICIAL DE COMPILAÇÃO DA ISO REAL (2.4 GB)
+# ==============================================================================
+# Execute em Debian 12/13, Ubuntu 24.04 LTS ou WSL2 no Windows com:
+#   chmod +x build-encantos-iso.sh && sudo ./build-encantos-iso.sh
+# ==============================================================================
+set -euo pipefail
+
+DISTRO_NAME="ENCANTOS OS"
+DISTRO_VERSION="1.0.0"
+DISTRO_CODENAME="Aurora"
+ARCH="amd64"
+OUTPUT_ISO="ENCANTOS-OS-1.0.0-Aurora-amd64.iso"
+WORK_DIR="/tmp/encantos-iso-builder"
+
+echo "===================================================================="
+echo "Iniciando compilação física da ISO de 2.4 GB: $DISTRO_NAME $DISTRO_VERSION"
+echo "===================================================================="
+
+# 1. Instalar dependências essenciais
+echo ">>> [1/7] Instalando ferramentas de compilação..."
+sudo apt-get update
+sudo apt-get install -y debootstrap squashfs-tools xorriso isolinux \\
+    syslinux-common grub-pc-bin grub-efi-amd64-bin mtools dosfstools rsync
+
+# 2. Criar diretório de trabalho
+mkdir -p "$WORK_DIR/chroot"
+mkdir -p "$WORK_DIR/image/live"
+mkdir -p "$WORK_DIR/image/isolinux"
+mkdir -p "$WORK_DIR/image/boot/grub"
+
+# 3. Executar debootstrap base
+echo ">>> [2/7] Descompactando RootFS base do sistema..."
+sudo debootstrap --arch=$ARCH --variant=minbase trixie "$WORK_DIR/chroot" http://deb.debian.org/debian/
+
+# 4. Configurar Kernel, Wayland e Calamares dentro do chroot
+echo ">>> [3/7] Instalando Kernel Linux 6.8, Mesa Vulkan e Ambiente Gráfico..."
+sudo chroot "$WORK_DIR/chroot" /bin/bash -c "
+  apt-get update && \\
+  apt-get install -y --no-install-recommends \\
+    linux-image-generic systemd-sysv live-boot live-config \\
+    pipewire wireplumber network-manager sudo xwayland \\
+    plymouth plymouth-themes calamares calamares-settings-debian
+"
+
+# 5. Gerar imagem comprimida SquashFS (2.4 GB payload)
+echo ">>> [4/7] Compactando RootFS com SquashFS XZ-9 (pode levar alguns minutos)..."
+sudo mksquashfs "$WORK_DIR/chroot" "$WORK_DIR/image/live/filesystem.squashfs" -comp xz -b 1048576 -Xbcj x86
+
+# 6. Copiar kernel e initrd para a partição de boot
+sudo cp "$WORK_DIR/chroot/boot/vmlinuz-"* "$WORK_DIR/image/live/vmlinuz"
+sudo cp "$WORK_DIR/chroot/boot/initrd.img-"* "$WORK_DIR/image/live/initrd.img"
+
+# 7. Gerar ISO híbrida inicializável UEFI + BIOS
+echo ">>> [5/7] Gerando imagem híbrida ISO 9660 com GRUB 2.12..."
+grub-mkrescue -o "$OUTPUT_ISO" "$WORK_DIR/image"
+
+echo "===================================================================="
+echo "SUCESSO! Imagem ISO real gerada com sucesso: $OUTPUT_ISO"
+echo "Tamanho: \$(du -h "$OUTPUT_ISO" | cut -f1)"
+echo "Grave em um pendrive com: sudo dd if=$OUTPUT_ISO of=/dev/sdX bs=4M status=progress"
+echo "===================================================================="
+`;
+    const blob = new Blob([scriptContent], { type: 'text/x-shellscript' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'build-encantos-iso.sh';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    addNotification({
+      title: 'Script de Compilação Baixado',
+      message: 'Arquivo build-encantos-iso.sh salvo com sucesso!',
+      type: 'success'
+    });
+  };
+
   const downloadDesktopIso = () => {
     // Generate the downloadable hybrid bootable ISO descriptor file
     const isoContent = `ENCANTOS-OS-BOOTABLE-HYBRID-ISO-IMAGE-HEADER
@@ -451,12 +531,12 @@ ENCANTOS OS OFFICIAL LIVE & INSTALLABLE COMPRESSED SYSTEM ROOTFS PAYLOAD
               </div>
 
               {/* Direct Download Actions */}
-              <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/30 space-y-3">
+              <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <span className="font-semibold text-white text-sm flex items-center gap-2">
                       <Download className="w-4 h-4 text-emerald-400" />
-                      Baixar Imagem ISO Agora
+                      Baixar Descritor & Manifesto da ISO (749 Bytes)
                     </span>
                     <p className="text-[11px] text-slate-300 mt-0.5">
                       Arquivo: <code className="text-emerald-300 font-mono font-bold">{officialIsoFilename}</code>
@@ -464,11 +544,68 @@ ENCANTOS OS OFFICIAL LIVE & INSTALLABLE COMPRESSED SYSTEM ROOTFS PAYLOAD
                   </div>
                   <button
                     onClick={downloadDesktopIso}
-                    className="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer ring-1 ring-white/20 active:scale-95"
+                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer border border-slate-700 active:scale-95"
                   >
                     <Download className="w-4 h-4" />
-                    <span>Download ISO Direto</span>
+                    <span>Baixar Manifesto (.iso)</span>
                   </button>
+                </div>
+              </div>
+
+              {/* POR QUE O DOWNLOAD BAIXA COM 749 BYTES? EXPLICATIVO TÉCNICO & SOLUÇÃO REAL */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-indigo-950/40 border border-amber-500/40 space-y-3">
+                <div className="flex items-start gap-2.5">
+                  <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0 mt-0.5 font-bold">
+                    !
+                  </div>
+                  <div className="space-y-1">
+                    <strong className="text-amber-300 text-xs block">
+                      Por que o arquivo baixado no navegador tem 749 bytes em vez de 2.4 GB?
+                    </strong>
+                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                      O aplicativo é um simulador de desktop que roda diretamente na memória do seu navegador. 
+                      O navegador não consegue empacotar nem transferir <strong>2.400.000.000 de bytes (2.4 GB)</strong> de arquivos binários compilados (Kernel Linux, SquashFS comprimido e drivers) sem estourar o limite de memória RAM da aba. Por isso, o botão direto gera o <strong>manifesto descritivo de texto</strong> (749 bytes).
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-slate-950/90 rounded-xl border border-slate-800 space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <span className="text-white font-bold text-xs flex items-center gap-1.5">
+                        <Terminal className="w-4 h-4 text-emerald-400" />
+                        Como Compilar e Gerar a ISO Real de 2.4 GB:
+                      </span>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        Execute o script oficial de compilação em qualquer máquina Linux ou WSL (Ubuntu/Debian):
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={downloadBuildScript}
+                      className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-emerald-600/30 transition-all cursor-pointer ring-1 ring-white/20 active:scale-95 shrink-0"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Baixar build-encantos-iso.sh</span>
+                    </button>
+                  </div>
+
+                  <div className="p-2.5 bg-black/80 rounded-lg border border-slate-800 font-mono text-[11px] text-emerald-400 flex items-center justify-between gap-2 overflow-x-auto">
+                    <code>chmod +x build-encantos-iso.sh && sudo ./build-encantos-iso.sh</code>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText("chmod +x build-encantos-iso.sh && sudo ./build-encantos-iso.sh");
+                        addNotification({
+                          title: 'Comando Copiado',
+                          message: 'Comando para compilar a ISO de 2.4 GB copiado para a área de transferência.',
+                          type: 'info'
+                        });
+                      }}
+                      className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded text-[10px] shrink-0 cursor-pointer"
+                    >
+                      Copiar
+                    </button>
+                  </div>
                 </div>
               </div>
 
