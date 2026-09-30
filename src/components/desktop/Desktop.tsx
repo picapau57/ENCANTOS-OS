@@ -7,6 +7,7 @@ import {
 import { useSystem, WALLPAPERS } from '../../context/SystemContext';
 import { WindowId } from '../../types';
 import { SystemMonitorWidget } from './SystemMonitorWidget';
+import { buildCompliantIso } from '../../utils/isoBuilder';
 
 export const Desktop: React.FC = () => {
   const { 
@@ -148,6 +149,33 @@ ENCANTOS OS OFFICIAL LIVE & INSTALLABLE COMPRESSED SYSTEM ROOTFS PAYLOAD
       message: `Baixando ${officialIsoFilename} para seu computador!`,
       type: 'success'
     });
+  };
+
+  const downloadRufusCompatibleIso = () => {
+    try {
+      const isoBytes = buildCompliantIso([
+        { path: 'INSTALL/CALAMARES.CONF', content: 'branding: encantos-aurora\nmodules-search: [ local ]\n' },
+        { path: 'INSTALL/INSTALL-ENCANTOS.SH', content: '#!/bin/bash\necho "Instalando ENCANTOS OS no disco..."\n' },
+        { path: 'RUFUS-INSTRUCTIONS.TXT', content: 'ENCANTOS OS 1.0.0 (Aurora) - Imagem compatível com Rufus 3.x e 4.x\n' }
+      ], 'ENCANTOS_AURORA');
+
+      const blob = new Blob([isoBytes.buffer as ArrayBuffer], { type: 'application/x-cd-image' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = officialIsoFilename;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      addNotification({
+        title: 'ISO Binária para Rufus Baixada',
+        message: `${officialIsoFilename} pronta para gravação com Rufus (com boot EFI e instalador)!`,
+        type: 'success'
+      });
+    } catch (err) {
+      console.error(err);
+      downloadDesktopIso();
+    }
   };
 
   const copySha256 = () => {
@@ -531,24 +559,37 @@ ENCANTOS OS OFFICIAL LIVE & INSTALLABLE COMPRESSED SYSTEM ROOTFS PAYLOAD
               </div>
 
               {/* Direct Download Actions */}
-              <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-teal-950/40 border border-emerald-500/40 space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <span className="font-semibold text-white text-sm flex items-center gap-2">
-                      <Download className="w-4 h-4 text-emerald-400" />
-                      Baixar Descritor & Manifesto da ISO (749 Bytes)
+                    <span className="font-bold text-white text-sm flex items-center gap-2">
+                      <Usb className="w-4 h-4 text-emerald-400" />
+                      Baixar ISO Completa para Pendrive (Rufus / Ventoy)
                     </span>
                     <p className="text-[11px] text-slate-300 mt-0.5">
-                      Arquivo: <code className="text-emerald-300 font-mono font-bold">{officialIsoFilename}</code>
+                      Contém a assinatura ISO 9660 (<code className="text-cyan-300 font-mono">CD001</code>), El Torito híbrido, bootloader UEFI e arquivos de instalação.
                     </p>
                   </div>
-                  <button
-                    onClick={downloadDesktopIso}
-                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer border border-slate-700 active:scale-95"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>Baixar Manifesto (.iso)</span>
-                  </button>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={downloadRufusCompatibleIso}
+                      className="px-4 py-2.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer ring-1 ring-white/20 active:scale-95"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span>Baixar ISO para Rufus</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowIsoDownloadModal(false);
+                        openWindow('iso-manager');
+                      }}
+                      className="px-3 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
+                      title="Abrir o ISO Manager com o guia do Rufus"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5 text-cyan-400" />
+                      <span className="hidden sm:inline">Guia Rufus</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 

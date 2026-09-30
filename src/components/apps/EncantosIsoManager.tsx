@@ -4,10 +4,11 @@ import {
   Terminal, HardDrive, Cpu, Activity, ShieldCheck, Layers, 
   Sparkles, Copy, FileText, Check, ArrowRight, Zap, X, 
   FolderCheck, Search, Filter, Maximize2, Minimize2, 
-  Trash2, CornerDownLeft, Eye, RefreshCw
+  Trash2, CornerDownLeft, Eye, RefreshCw, Usb
 } from 'lucide-react';
 import { useSystem } from '../../context/SystemContext';
 import { ChecksumValidator } from './iso/ChecksumValidator';
+import { RufusUsbPackager } from './iso/RufusUsbPackager';
 
 export interface BuildStage {
   id: string;
@@ -38,7 +39,7 @@ export const EncantosIsoManager: React.FC = () => {
   const { addNotification, createFile } = useSystem();
 
   // Navigation & View Mode
-  const [activeTab, setActiveTab] = useState<'split' | 'logs' | 'dashboard' | 'integrity'>('split');
+  const [activeTab, setActiveTab] = useState<'split' | 'logs' | 'dashboard' | 'integrity' | 'rufus'>('split');
   const [isChecksumVerified, setIsChecksumVerified] = useState<boolean>(false);
   const [buildStatus, setBuildStatus] = useState<'idle' | 'building' | 'paused' | 'completed' | 'cancelled'>('idle');
   const [progress, setProgress] = useState<number>(0);
@@ -659,6 +660,16 @@ echo "===================================================================="
               {isChecksumVerified && (
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
               )}
+            </button>
+            <button
+              onClick={() => setActiveTab('rufus')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
+                activeTab === 'rufus' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow' : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Baixar ISO com todos os arquivos de instalação para colocar no Rufus / Pendrive"
+            >
+              <Usb className="w-3.5 h-3.5 text-cyan-300" />
+              <span className="hidden sm:inline">Pendrive / Rufus</span>
             </button>
           </div>
 
@@ -1338,6 +1349,16 @@ echo "===================================================================="
                   type: 'success'
                 });
               }}
+            />
+          </div>
+        )}
+
+        {/* RUFUS / USB PACKAGER TAB VIEW */}
+        {activeTab === 'rufus' && (
+          <div className="space-y-4">
+            <RufusUsbPackager
+              filename={isoFilename}
+              onNotification={(title, message, type) => addNotification({ title, message, type })}
             />
           </div>
         )}
