@@ -267,6 +267,31 @@ echo "========================================================"
         </button>
       </div>
 
+      {/* Alerta de Solução para o erro do Rufus da imagem do usuário */}
+      <div className="p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/40 text-xs space-y-2">
+        <div className="flex items-center gap-2 text-amber-300 font-bold">
+          <Info className="w-4 h-4 text-amber-400 shrink-0" />
+          <span>Solução para a mensagem: "Esta imagem não é inicializável ou utiliza um método de inicialização..."</span>
+        </div>
+        <p className="text-[11px] text-slate-300 leading-relaxed">
+          O Rufus exibe esse aviso quando seleciona um arquivo que não possui uma partição de boot FAT (<code className="text-cyan-300 font-mono">efiboot.img</code>) embutida ou quando o arquivo baixado foi o descritor de texto.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1 text-[11px]">
+          <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800">
+            <strong className="text-emerald-400 block font-semibold mb-1">✓ Opção 1: Nova ISO Híbrida UEFI (Atualizada)</strong>
+            <p className="text-slate-400">
+              Clique no botão verde acima <strong>"Baixar ISO para Pendrive (Rufus)"</strong>. Ela agora inclui a partição FAT12 EFI completa que o Rufus requer para liberar o botão <strong>INICIAR</strong>.
+            </p>
+          </div>
+          <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800">
+            <strong className="text-cyan-400 block font-semibold mb-1">✓ Opção 2: Ventoy (100% Garantido e sem Erros)</strong>
+            <p className="text-slate-400">
+              Instale o <strong>Ventoy</strong> no seu pendrive de 16 GB uma única vez. Depois, basta <strong>arrastar e soltar</strong> o arquivo <code className="text-cyan-300">.iso</code> para dentro dele. O Ventoy não rejeita nenhuma imagem!
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Visual Rufus Guide & Settings Card */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
         {/* Rufus UI Mockup Preview (Left 7 cols) */}
